@@ -11,4 +11,4 @@ Because of phrackCTF-Platform depends on third-party mail service, you should do
 
 ## Usage   
 `docker run -d -p "0.0.0.0:8080:8080" -p "0.0.0.0:8009:8009" -p "0.0.0.0:5432:5432" pctf-personal`   
-
+Then try: http://localhost:8080/phrackCTF
