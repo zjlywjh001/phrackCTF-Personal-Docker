@@ -36,6 +36,14 @@ RUN \
 	update-alternatives --config java && \
 	export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64/jre && \
 	export JRE_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64/jre 
+	
+# Fix certificate issues
+RUN apt-get update && \
+	apt-get install -y ca-certificates-java && \
+	apt-get clean && \
+	update-ca-certificates -f && \
+	rm -rf /var/lib/apt/lists/* && \
+	rm -rf /var/cache/oracle-jdk8-installer;
 
 # Define commonly used JAVA_HOME variable
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/jre
@@ -46,7 +54,7 @@ RUN \
 	groupadd tomcat && \
 	useradd -s /bin/false -g tomcat -d /opt/tomcat tomcat && \
 	cd /tmp && \
-	curl -O http://mirror.cc.columbia.edu/pub/software/apache/tomcat/tomcat-8/v8.5.16/bin/apache-tomcat-8.5.16.tar.gz && \
+	curl -O http://mirrors.advancedhosters.com/apache/tomcat/tomcat-8/v8.5.29/bin/apache-tomcat-8.5.29.tar.gz && \
 	mkdir /opt/tomcat && \
 	tar xzvf apache-tomcat-8*tar.gz -C /opt/tomcat --strip-components=1 && \
 	cd /opt/tomcat && \
@@ -75,6 +83,7 @@ WORKDIR /opt/tomcat
 COPY ./phrackCTF/ /opt/tomcat/webapps/phrackCTF/
 COPY ./config/mail.properties /opt/tomcat/webapps/phrackCTF/WEB-INF/classes/
 COPY ./config/spring-mail.xml /opt/tomcat/webapps/phrackCTF/WEB-INF/classes/
+COPY ./config/spring-shiro.xml /opt/tomcat/webapps/phrackCTF/WEB-INF/classes/
 COPY ./config/system.properties /opt/tomcat/webapps/phrackCTF/WEB-INF/classes/
 RUN chown -R tomcat:tomcat /opt/tomcat/webapps/phrackCTF/
 
